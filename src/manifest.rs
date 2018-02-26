@@ -133,13 +133,3 @@ impl LangMapper {
         }
     }
 }
-
-#[cfg(test)]
-mod manifest_tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        unimplemented!()
-    }
-}

@@ -17,7 +17,8 @@ maskerad_localization [CSV FILE] [OUTPUT DIRECTORY]
 
 ## Details
 
-Work in progress.
+Let's say we have the following CSV file:
+
 
 ## License
 
