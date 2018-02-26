@@ -15,7 +15,6 @@ use maskerad_localization::locale;
 
 use std::env;
 use std::fs;
-use std::path::Path;
 use std::io::BufWriter;
 use std::process;
 
