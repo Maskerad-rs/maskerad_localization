@@ -6,13 +6,17 @@
 // copied, modified, or distributed except according to those terms.
 
 #[derive(Debug, Deserialize)]
-pub struct Header {
-    id: String,
-    locales: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
 pub struct Row {
     key: String,
     values: Vec<String>,
+}
+
+impl Row {
+    pub fn key(&self) -> &str {
+        &self.key
+    }
+
+    pub fn values(&self) -> &[String] {
+        &self.values
+    }
 }

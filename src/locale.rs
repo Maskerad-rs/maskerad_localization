@@ -5,29 +5,15 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use errors::{LocalizationError, LocalizationResult};
+use regex::Regex;
 
-#[derive(Debug)]
-pub struct UnvalidatedLocale {
-    locale: String,
-}
-
-impl<'a> From<&'a str> for UnvalidatedLocale {
-    fn from(locale: &'a str) -> Self {
-        UnvalidatedLocale {
-            locale: locale.to_owned()
-        }
+pub fn is_valid_locale<S>(text: S) -> bool where
+    S: AsRef<str>
+{
+    lazy_static! {
+        static ref REGEX_LOCALE: Regex = Regex::new("").unwrap();
     }
-}
 
-impl UnvalidatedLocale {
-    pub fn validate(self) -> LocalizationResult<ValidatedLocale> {
-        // the regex. (maybe cache it with lazy static or something).
-        unimplemented!()
-    }
-}
-
-pub struct ValidatedLocale {
-    locale: String
+    REGEX_LOCALE.is_match(text.as_ref())
 }
 

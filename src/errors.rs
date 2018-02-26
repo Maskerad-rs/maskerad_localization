@@ -9,11 +9,20 @@ use std::fmt;
 use std::error::Error;
 
 use regex::Error as RegexError;
+use csv::Error as CSVError;
+use serde_json::Error as JSONError;
+use std::io::Error as IOError;
 
 #[derive(Debug)]
 pub enum LocalizationError {
     RegexError(String, RegexError),
     UnvalidLocale(String),
+    CSVError(String, CSVError),
+    HeaderError(String),
+    JSONError(String, JSONError),
+    IOError(String, IOError),
+    LanguageMappingError(String),
+    ManifestMapError(String),
 }
 
 unsafe impl Send for LocalizationError {}
@@ -28,6 +37,24 @@ impl fmt::Display for LocalizationError {
             &LocalizationError::UnvalidLocale(ref desc) => {
                 write!(f, "Unvalid locale: {}", desc)
             },
+            &LocalizationError::CSVError(ref desc, _) => {
+                write!(f, "CSV error: {}", desc)
+            },
+            &LocalizationError::HeaderError(ref desc) => {
+                write!(f, "Header error: {}", desc)
+            },
+            &LocalizationError::JSONError(ref desc, _) => {
+                write!(f, "JSON error: {}", desc)
+            },
+            &LocalizationError::IOError(ref desc, _) => {
+                write!(f, "I/O error: {}", desc)
+            },
+            &LocalizationError::LanguageMappingError(ref desc) => {
+                write!(f, "Language mapping error: {}", desc)
+            },
+            &LocalizationError::ManifestMapError(ref desc) => {
+                write!(f, "Manifest map error: {}", desc)
+            },
         }
     }
 }
@@ -41,6 +68,24 @@ impl Error for LocalizationError {
             &LocalizationError::UnvalidLocale(_) => {
                 "UnvalidLocale"
             },
+            &LocalizationError::CSVError(_, _) => {
+                "CSVError"
+            },
+            &LocalizationError::HeaderError(_) => {
+                "HeaderError"
+            },
+            &LocalizationError::JSONError(_, _) => {
+                "JSONError"
+            },
+            &LocalizationError::IOError(_, _) => {
+                "IOError"
+            },
+            &LocalizationError::LanguageMappingError(_) => {
+                "LanguageMappingError"
+            },
+            &LocalizationError::ManifestMapError(_) => {
+                "ManifestMapError"
+            },
         }
     }
 
@@ -52,6 +97,24 @@ impl Error for LocalizationError {
             &LocalizationError::UnvalidLocale(_) => {
                 None
             },
+            &LocalizationError::CSVError(_, ref csv_error) => {
+                Some(csv_error)
+            },
+            &LocalizationError::HeaderError(_) => {
+                None
+            },
+            &LocalizationError::JSONError(_, ref json_error) => {
+                Some(json_error)
+            },
+            &LocalizationError::IOError(_, ref io_error) => {
+                Some(io_error)
+            },
+            &LocalizationError::LanguageMappingError(_) => {
+                None
+            },
+            &LocalizationError::ManifestMapError(_) => {
+                None
+            },
         }
     }
 }
@@ -61,5 +124,23 @@ pub type LocalizationResult<T> = Result<T, LocalizationError>;
 impl From<RegexError> for LocalizationError {
     fn from(error: RegexError) -> Self {
         LocalizationError::RegexError(String::from("Error while parsing a regular expression."), error)
+    }
+}
+
+impl From<CSVError> for LocalizationError {
+    fn from(error: CSVError) -> Self {
+        LocalizationError::CSVError(String::from("Error while reading a CSV file."), error)
+    }
+}
+
+impl From<JSONError> for LocalizationError {
+    fn from(error: JSONError) -> Self {
+        LocalizationError::JSONError(String::from("Error while serializing a data structure to a JSON representation."), error)
+    }
+}
+
+impl From<IOError> for LocalizationError {
+    fn from(error: IOError) -> Self {
+        LocalizationError::IOError(String::from("Error while doing I/O operations."), error)
     }
 }
